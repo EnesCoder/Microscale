@@ -11,6 +11,7 @@ mass = 0.6
 gravity_scale = 0.0
 angular_damp = 16.513
 script = ExtResource("1_fajft")
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.48, 0.5)
