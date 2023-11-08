@@ -1,12 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://dn3nd737sk3wg"]
+[gd_scene load_steps=4 format=3 uid="uid://dn3nd737sk3wg"]
 
 [ext_resource type="PackedScene" uid="uid://cxge76twrgpg8" path="res://player.tscn" id="1_musse"]
+[ext_resource type="Script" path="res://game.gd" id="1_yb2qq"]
 [ext_resource type="Script" path="res://camera.gd" id="2_8fwsx"]
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_yb2qq")
 
-[node name="Player" parent="." instance=ExtResource("1_musse")]
+[node name="Player" parent="." groups=["Player_cells"] instance=ExtResource("1_musse")]
 position = Vector2(504, 227)
+angular_damp = 20.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("2_8fwsx")
