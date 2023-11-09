@@ -28,7 +28,7 @@ func interpolate_zoom(delta, where_to_zoom):
 	print(global_position)
 
 func _ready():
-	pass
+	$SplitScalePanel.visible = false
 
 func _process(_delta):
 	pass

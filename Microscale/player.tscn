@@ -54,6 +54,9 @@ offset_right = 95.0
 offset_bottom = -10.0
 text = "Split"
 
+[node name="TopCoordinates" type="Node2D" parent="."]
+position = Vector2(-31, -30)
+
 [connection signal="timeout" from="ThrustTimer" to="." method="_on_thrust_timer_timeout"]
 [connection signal="body_entered" from="CollisionChecker" to="." method="_on_collision_checker_body_entered"]
 [connection signal="body_exited" from="CollisionChecker" to="." method="_on_collision_checker_body_exited"]
