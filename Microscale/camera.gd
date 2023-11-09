@@ -4,7 +4,6 @@ extends Camera2D
 
 func interpolate_zoom(delta, where_to_zoom):
 	var initial_pos = global_position
-	var initial_zoom = zoom
 	var zoomed_in = false
 	var dist = where_to_zoom - initial_pos
 	print(global_position)
@@ -14,7 +13,7 @@ func interpolate_zoom(delta, where_to_zoom):
 		#zoom += Vector2(380/dist.length(), 380/dist.length()) * delta
 		#if zoom.x > split_zoom_threshold:
 		#	zoomed_in = true
-		if where_to_zoom - global_position < Vector2.ONE:
+		if where_to_zoom - global_position < Vector2.ONE*2:
 			zoomed_in = true
 		await get_tree().create_timer(delta).timeout
 	await get_tree().create_timer(1.0).timeout

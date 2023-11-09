@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cxge76twrgpg8"]
+[gd_scene load_steps=6 format=3 uid="uid://cxge76twrgpg8"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_fajft"]
 [ext_resource type="Texture2D" uid="uid://0hj5n1jyjcmc" path="res://icon.svg" id="1_mly7d"]
@@ -8,6 +8,9 @@ size = Vector2(124, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_biycm"]
 size = Vector2(298.042, 136)
+
+[sub_resource type="Theme" id="Theme_uqshy"]
+default_font_size = 15
 
 [node name="Player" type="RigidBody2D"]
 mass = 0.6
@@ -34,6 +37,26 @@ scale = Vector2(0.5, 0.5)
 scale = Vector2(0.456311, 1)
 shape = SubResource("RectangleShape2D_biycm")
 
+[node name="UIHolder" type="Node2D" parent="."]
+
+[node name="CellInfo" type="ItemList" parent="UIHolder"]
+z_index = 5
+offset_right = 112.0
+offset_bottom = 41.0
+theme = SubResource("Theme_uqshy")
+item_count = 1
+item_0/text = "Scale:"
+
+[node name="SplitButton" type="Button" parent="UIHolder"]
+z_index = 5
+offset_top = -43.0
+offset_right = 95.0
+offset_bottom = -10.0
+text = "Split"
+
 [connection signal="timeout" from="ThrustTimer" to="." method="_on_thrust_timer_timeout"]
 [connection signal="body_entered" from="CollisionChecker" to="." method="_on_collision_checker_body_entered"]
 [connection signal="body_exited" from="CollisionChecker" to="." method="_on_collision_checker_body_exited"]
+[connection signal="mouse_entered" from="CollisionChecker" to="." method="_on_collision_checker_mouse_entered"]
+[connection signal="mouse_exited" from="CollisionChecker" to="." method="_on_collision_checker_mouse_exited"]
+[connection signal="pressed" from="UIHolder/SplitButton" to="." method="_on_split_button_pressed"]

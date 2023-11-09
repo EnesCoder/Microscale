@@ -6,12 +6,17 @@ var mouse_pos : Vector2
 var can_thrust = true
 var splitting = false
 var rotation_force : Vector2
-var connection_j : DampedSpringJoint2D
-@onready var meant_scale = $Sprite2D.scale
+var mouse_in = false
+var split = false
+@onready var cell_group = get_tree().get_nodes_in_group("Player_cells")
+@onready var meant_scale = $Sprite2D.scale.x
+@onready var ui_holder = $UIHolder
 const split_dist = 140
 
 func _ready():
 	add_to_group("Player_cells")
+
+	ui_holder.visible = false
 	
 	const min_force_dvdr = 2
 	var rot_rand1 = randi_range(-move_force, -move_force/min_force_dvdr)
@@ -26,18 +31,19 @@ func Scale(scalar : Vector2):
 	$Sprite2D.scale += scalar 
 	$CollisionShape2D.scale += scalar 
 	$CollisionChecker.scale += scalar
-	meant_scale = $Sprite2D.scale
+	meant_scale = $Sprite2D.scale.x
 
 func Scale_to(new_scale : Vector2):
 	$Sprite2D.scale = new_scale 
 	$CollisionShape2D.scale = new_scale 
 	$CollisionChecker.scale = new_scale
-	meant_scale = $Sprite2D.scale
+	meant_scale = $Sprite2D.scale.x
 
 func Split(delta):
 	# setup
+	print("mitosis")
 	splitting = true
-	for cell in get_tree().get_nodes_in_group("Player_cells"):
+	for cell in cell_group:
 		cell.linear_velocity = Vector2.ZERO
 		cell.angular_velocity = 0
 	
@@ -56,13 +62,14 @@ func Split(delta):
 	await get_tree().create_timer(0.7).timeout
 	
 	# split and scale down
-	while abs(new_cell.global_position.x - global_position.x) < split_dist*meant_scale.x:
-		if meant_scale.x > meant_scale.x-0.1: Scale(Vector2(-delta*0.1, -delta*0.1))
-		else: Scale_to(Vector2(meant_scale.x-0.1, meant_scale.x-0.1))
+	while abs(new_cell.global_position.x - global_position.x) < split_dist*meant_scale:
+		if meant_scale > meant_scale-0.1: Scale(Vector2(-delta*0.1, -delta*0.1))
+		else: Scale_to(Vector2(meant_scale-0.1, meant_scale-0.1))
 		new_cell.global_position += Vector2(delta * 70, 0)
 		await get_tree().create_timer(delta).timeout
 
-	connection_j = DampedSpringJoint2D.new()
+	# creating the joint
+	var connection_j = DampedSpringJoint2D.new()
 	connection_j.length = 22
 	connection_j.stiffness = 0.2
 	connection_j.bias = 3
@@ -83,8 +90,23 @@ func Thrust():
 	var thrust_dir = (mouse_pos - global_position).normalized()
 	apply_impulse(thrust_dir * thrust_force)
 
+func _input(event):
+	if event is InputEventMouseButton:
+		if event.is_pressed() and event.button_index == MOUSE_BUTTON_RIGHT:
+			if mouse_in:
+				print("mouse click on cell "+str(cell_group.find(self)))
+				ui_holder.visible = not ui_holder.visible
+				print(name)
+				for c in cell_group:
+					if c != self: c.ui_holder.visible = false
+			#elif ui_holder.visible:
+			#	ui_holder.visible = false
+
 func _process(_delta):
 	mouse_pos = get_parent().get_node("Camera2D").get_global_mouse_position()
+	
+	ui_holder.global_rotation = 0
+	$UIHolder/CellInfo.set_item_text(0, "Scale: "+str(int(meant_scale*10))+" µm")
 
 func _physics_process(delta):
 	var move_dir = (Input.get_vector("left", "right", "up", "down")).normalized()
@@ -95,8 +117,9 @@ func _physics_process(delta):
 			Rotate_physically(rotation_force * move_dir.x, delta)
 		if Input.is_action_just_pressed("thrust") and can_thrust:
 			Thrust()
-	if Input.is_action_just_pressed("split"):
-		if meant_scale.x > 0.25:
+	if split:
+		split = false
+		if meant_scale > 0.25:
 			await Split(delta)
 
 func _on_thrust_timer_timeout():
@@ -107,3 +130,14 @@ func _on_collision_checker_body_entered(body):
 
 func _on_collision_checker_body_exited(body):
 	pass
+
+func _on_collision_checker_mouse_entered():
+	mouse_in = true
+
+func _on_collision_checker_mouse_exited():
+	mouse_in = false
+
+func _on_split_button_pressed():
+	if not split:
+		ui_holder.visible = false
+		split = true
