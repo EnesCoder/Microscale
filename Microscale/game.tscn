@@ -33,7 +33,7 @@ default_font_size = 15
 [node name="Game" type="Node2D"]
 script = ExtResource("1_yb2qq")
 
-[node name="Player" parent="." groups=["Player_cells"] instance=ExtResource("1_musse")]
+[node name="Player" parent="." instance=ExtResource("1_musse")]
 position = Vector2(504, 227)
 angular_damp = 20.0
 
@@ -60,6 +60,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TextEdit" type="TextEdit" parent="Camera2D/SplitScalePanel"]
+layout_mode = 0
 offset_left = 87.0
 offset_top = 66.0
 offset_right = 213.0
@@ -77,5 +78,17 @@ text = "Done"
 
 [node name="UIManager" type="Node" parent="."]
 script = ExtResource("4_kn80r")
+
+[node name="Obstacle" type="StaticBody2D" parent="."]
+position = Vector2(-746, -282)
+rotation = 1.28805
+metadata/_edit_group_ = true
+
+[node name="Polygon2D" type="Polygon2D" parent="Obstacle"]
+color = Color(0.831373, 0.784314, 0.666667, 1)
+polygon = PackedVector2Array(-81, 135, 59, 319, 253, 91, 303, -17, 217, -81, 143, -201, -63, -137, -161, -55, -9, -1, -217, 69)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Obstacle"]
+polygon = PackedVector2Array(-160, -53, -65, -137, 141, -199, 221, -76, 301, -18, 248, 100, 61, 320, -82, 132, -217, 68, -16, 0)
 
 [connection signal="pressed" from="Camera2D/SplitScalePanel/Button" to="UIManager" method="_on_button_pressed"]

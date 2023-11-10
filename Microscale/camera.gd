@@ -13,10 +13,11 @@ func interpolate_zoom(delta, where_to_zoom):
 		#zoom += Vector2(380/dist.length(), 380/dist.length()) * delta
 		#if zoom.x > split_zoom_threshold:
 		#	zoomed_in = true
-		if where_to_zoom - global_position < Vector2.ONE*2:
+		if abs(where_to_zoom - global_position) < Vector2.ONE*4:
+			print("YES, IT IS ZOOMED IN PEOPLE!")
 			zoomed_in = true
 		await get_tree().create_timer(delta).timeout
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.6).timeout
 	while zoomed_in:
 		global_position = lerp(global_position, initial_pos, delta*(dist.length()/200))
 		#zoom -= Vector2(2, 2) * delta

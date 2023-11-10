@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://buy6j7i22ls6o"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rxux2"]
+emission_shape = 1
+emission_sphere_radius = 10.0
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 78.17
+angular_velocity_min = 10.0
+angular_velocity_max = 60.84
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+linear_accel_min = 11.27
+linear_accel_max = 18.31
+scale_min = 5.0
+scale_max = 5.0
+color = Color(0.321569, 0.713726, 1, 1)
+
+[node name="GPUParticles2D" type="GPUParticles2D"]
+amount = 13
+process_material = SubResource("ParticleProcessMaterial_rxux2")
+lifetime = 0.7

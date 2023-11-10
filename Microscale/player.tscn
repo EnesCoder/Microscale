@@ -7,7 +7,7 @@
 size = Vector2(124, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_biycm"]
-size = Vector2(298.042, 136)
+size = Vector2(315.574, 144)
 
 [sub_resource type="Theme" id="Theme_uqshy"]
 default_font_size = 15
