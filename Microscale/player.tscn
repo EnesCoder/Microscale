@@ -41,11 +41,12 @@ shape = SubResource("RectangleShape2D_biycm")
 
 [node name="CellInfo" type="ItemList" parent="UIHolder"]
 z_index = 5
-offset_right = 112.0
-offset_bottom = 41.0
+offset_right = 129.0
+offset_bottom = 64.0
 theme = SubResource("Theme_uqshy")
-item_count = 1
+item_count = 2
 item_0/text = "Scale:"
+item_1/text = "Fragility: "
 
 [node name="SplitButton" type="Button" parent="UIHolder"]
 z_index = 5

@@ -1,6 +1,8 @@
 extends Camera2D
 
 @export var split_zoom_threshold = 2
+@export var follow_drag = 200
+@export var follow_speed = 3
 
 func interpolate_zoom(delta, where_to_zoom):
 	var initial_pos = global_position
@@ -28,8 +30,10 @@ func interpolate_zoom(delta, where_to_zoom):
 		await get_tree().create_timer(delta).timeout
 	print(global_position)
 
+func Follow(node : Node2D, delta):
+	var dist = node.global_position - global_position
+	if dist.length() > follow_drag:
+		global_position += dist*follow_speed*delta
+
 func _ready():
 	$SplitScalePanel.visible = false
-
-func _process(_delta):
-	pass

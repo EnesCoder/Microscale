@@ -38,6 +38,7 @@ position = Vector2(504, 227)
 angular_damp = 20.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
 script = ExtResource("2_8fwsx")
 
 [node name="SplitScalePanel" type="Panel" parent="Camera2D"]
@@ -90,5 +91,7 @@ polygon = PackedVector2Array(-81, 135, 59, 319, 253, 91, 303, -17, 217, -81, 143
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Obstacle"]
 polygon = PackedVector2Array(-160, -53, -65, -137, 141, -199, 221, -76, 301, -18, 248, 100, 61, 320, -82, 132, -217, 68, -16, 0)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]
 
 [connection signal="pressed" from="Camera2D/SplitScalePanel/Button" to="UIManager" method="_on_button_pressed"]

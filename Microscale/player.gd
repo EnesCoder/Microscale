@@ -1,9 +1,11 @@
 extends RigidBody2D
 
+class_name Cell
+
 @export var move_force = 100
 @export var thrust_force = 220
 @export var fragility = 20
-@export var harming_vel_threshold = 200
+@export var harming_vel_threshold = 160
 var mouse_pos : Vector2
 var can_thrust = true
 var splitting = false
@@ -79,8 +81,8 @@ func Split(delta):
 	new_cell.z_index = -1
 	new_cell.get_node("CollisionShape2D").disabled = true
 	get_parent().add_child(new_cell)
+	new_cell.fragility = fragility
 	new_cell.Scale_to(Vector2(split_scalar, split_scalar))
-	new_cell.fragility *= 2
 	
 	# wait a bit
 	await get_tree().create_timer(0.7).timeout
@@ -150,10 +152,17 @@ func Transform_organism(): # TODO: fix this idiot
 	poly.z_index = 10
 	add_child(poly)
 
+func Are_cells_splitting():
+	for c in cell_group:
+		if c != null and c.splitting:
+			return true
+			break
+	return false
+
 func _input(event):
 	if event is InputEventMouseButton:
 		if event.is_pressed() and event.button_index == MOUSE_BUTTON_RIGHT:
-			if mouse_in:
+			if mouse_in and not Are_cells_splitting():
 				print("mouse click on cell "+str(cell_group.find(self)))
 				ui_holder.visible = not ui_holder.visible
 				print(name)
@@ -162,7 +171,8 @@ func _input(event):
 			#elif ui_holder.visible:
 			#	ui_holder.visible = false
 
-func _process(_delta):
+func _process(delta):
+	get_parent().get_node("Camera2D").Follow(self, delta)
 	print("cell "+name+" vel: "+str(linear_velocity.length()))
 	print("cell "+name+" fragility: "+str(fragility))
 	
@@ -171,16 +181,13 @@ func _process(_delta):
 	mouse_pos = get_parent().get_node("Camera2D").get_global_mouse_position()
 
 	ui_holder.global_rotation = 0
-	$UIHolder/CellInfo.set_item_text(0, "Scale: "+str(meant_scale*10)+" µm")
+	$UIHolder/CellInfo.set_item_text(0, "Scale: "+str(meant_scale*10, 2)+" µm")
+	$UIHolder/CellInfo.set_item_text(1, "Fragility: "+str(fragility))
 
 func _physics_process(delta):
 	var move_dir = (Input.get_vector("left", "right", "up", "down")).normalized()
 	var force = move_dir * move_force
-	var can_move = true
-	for c in cell_group:
-		if c != null and c.splitting:
-			can_move = false
-			break
+	var can_move = not Are_cells_splitting()
 	if can_move:
 		apply_central_force(force)
 		if force:
@@ -198,7 +205,7 @@ func _on_thrust_timer_timeout():
 	can_thrust = true
 
 func _on_collision_checker_body_entered(body):
-	if not body.is_in_group("Player_cells") and linear_velocity.length() > harming_vel_threshold: # this means it is not a cell of ours
+	if not body in cell_group and linear_velocity.length() > harming_vel_threshold: # this means it is not a cell of ours
 		fragility -= (linear_velocity.length() - harming_vel_threshold)/10
 
 func _on_collision_checker_body_exited(body):
